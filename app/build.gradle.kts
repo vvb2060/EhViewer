@@ -28,19 +28,6 @@ android {
         )
     }
 
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            if (isRelease) {
-                include(*supportedAbis)
-                isUniversalApk = true
-            } else {
-                include("x86_64", "x86")
-            }
-        }
-    }
-
     val signConfig = signingConfigs.create("release") {
         storeFile = File(projectDir.path + "/keystore/androidkey.jks")
         storePassword = "000000"
