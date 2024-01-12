@@ -511,6 +511,8 @@
     <string name="settings_advanced_read_cache_size">読書用キャッシュのサイズ</string>
     <string name="settings_advanced_app_language_title">アプリの言語</string>
     <string name="settings_advanced_proxy">プロキシ</string>
+    <string name="settings_advanced_dns_over_http_title">DNS over HTTPS</string>
+    <string name="settings_advanced_dns_over_http_summary">一部の国で DNS キャッシュポイズニングから守ります</string>
     <string name="settings_advanced_backup_favorite">お気に入りリストをバックアップ</string>
     <string name="settings_advanced_backup_favorite_summary">リモートのお気に入りリストをローカルにバックアップします</string>
     <string name="settings_advanced_backup_favorite_start">お気に入りリスト「%s」をバックアップ中です</string>

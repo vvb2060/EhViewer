@@ -35,7 +35,9 @@ import coil3.request.crossfade
 import coil3.serviceLoaderEnabled
 import coil3.util.DebugLogger
 import com.hippo.ehviewer.client.EhCookieStore
+import com.hippo.ehviewer.client.EhDns
 import com.hippo.ehviewer.client.EhEngine
+import com.hippo.ehviewer.client.EhSSLSocketFactory
 import com.hippo.ehviewer.client.EhTagDatabase
 import com.hippo.ehviewer.client.data.GalleryDetail
 import com.hippo.ehviewer.coil.DownloadThumbInterceptor
@@ -54,6 +56,7 @@ import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import kotlinx.coroutines.DelicateCoroutinesApi
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.internal.platform.Platform
 import okio.FileSystem
 import okio.Path.Companion.toOkioPath
 
@@ -227,7 +230,9 @@ class EhApplication :
         val nonCacheOkHttpClient by lazy {
             OkHttpClient.Builder().apply {
                 cookieJar(EhCookieStore)
+                dns(EhDns)
                 proxySelector(ehProxySelector)
+                sslSocketFactory(EhSSLSocketFactory(), Platform.get().platformTrustManager())
                 addInterceptor(CloudflareInterceptor(application))
             }.build()
         }

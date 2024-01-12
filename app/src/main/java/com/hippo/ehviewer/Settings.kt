@@ -170,11 +170,13 @@ object Settings {
     const val KEY_APP_LANGUAGE = "app_language"
     private const val DEFAULT_APP_LANGUAGE = "system"
     private const val KEY_PROXY_TYPE = "proxy_type"
-    private const val DEFAULT_PROXY_TYPE = EhProxySelector.TYPE_SYSTEM
+    private const val DEFAULT_PROXY_TYPE = EhProxySelector.TYPE_DIRECT
     private const val KEY_PROXY_IP = "proxy_ip"
     private val DEFAULT_PROXY_IP: String? = null
     private const val KEY_PROXY_PORT = "proxy_port"
     private const val DEFAULT_PROXY_PORT = -1
+    private const val KEY_DOH = "dns_over_https"
+    private const val DEFAULT_DOH = true
     private const val KEY_USER_AGENT = "user_agent"
     private const val KEY_APP_LINK_VERIFY_TIP = "app_link_verify_tip"
     private const val DEFAULT_APP_LINK_VERIFY_TIP = false
@@ -638,6 +640,9 @@ object Settings {
     fun putProxyPort(value: Int) {
         putInt(KEY_PROXY_PORT, value)
     }
+
+    val doH: Boolean
+        get() = getBoolean(KEY_DOH, DEFAULT_DOH)
 
     val userAgent: String?
         get() = getString(KEY_USER_AGENT, CHROME_USER_AGENT)
