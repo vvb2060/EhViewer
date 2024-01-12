@@ -1,0 +1,26 @@
+name: Rebase Upstream
+on:
+  schedule:
+  - cron: "42 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+      with:
+        fetch-depth: 10
+        token: ${{ secrets.GH_PAT }}
+    - shell: bash
+      run: |
+        set -ex;
+
+        git remote add upstream https://github.com/EhViewer-NekoInverter/EhViewer.git;
+        git fetch upstream master --depth=100;
+
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        git rebase upstream/master;
+        git push --force-with-lease;
