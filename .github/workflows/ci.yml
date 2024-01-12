@@ -2,10 +2,7 @@ name: CI
 
 on:
   push:
-    branches:
-      - '*'
-  pull_request:
-  workflow_dispatch:
+    branches: [ 'main' ]
 
 jobs:
   linux:
@@ -23,6 +20,18 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          dependency-graph: generate-and-submit
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: java-kotlin, c-cpp
+          build-mode: manual
+          dependency-caching: true
 
       - name: Spotless Check
         run: ./gradlew spotlessCheck
@@ -30,39 +39,25 @@ jobs:
       - name: Gradle Build
         run: ./gradlew assembleRelease
 
-      - name: Upload ARM64
-        uses: actions/upload-artifact@v4
-        with:
-          name: arm64-v8a-${{ github.sha }}
-          path: app/build/outputs/apk/release/app-arm64-v8a-release.apk
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
 
-      - name: Upload x86_64
+      - name: Upload app
         uses: actions/upload-artifact@v4
         with:
-          name: x86_64-${{ github.sha }}
-          path: app/build/outputs/apk/release/app-x86_64-release.apk
+          name: EhViewer-${{ github.sha }}
+          path: app/build/outputs
 
-      - name: Upload ARM32
-        uses: actions/upload-artifact@v4
-        with:
-          name: armeabi-v7a-${{ github.sha }}
-          path: app/build/outputs/apk/release/app-armeabi-v7a-release.apk
+      - name: Set ci tag
+        run: git tag -f ci; git push -f --tags
 
-      - name: Upload x86
-        uses: actions/upload-artifact@v4
+      - name: Release
+        uses: ncipollo/release-action@v1
         with:
-          name: x86-${{ github.sha }}
-          path: app/build/outputs/apk/release/app-x86-release.apk
-
-      - name: Upload Universal
-        uses: actions/upload-artifact@v4
-        with:
-          name: universal-${{ github.sha }}
-          path: app/build/outputs/apk/release/app-universal-release.apk
-
-      - name: Upload mapping
-        uses: actions/upload-artifact@v4
-        with:
-          name: mapping-${{ github.sha }}
-          path: app/build/outputs/mapping/release/mapping.txt
-          retention-days: 5
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: "app/build/outputs/apk/release/app-release.apk"
+          name: "CI Build"
+          omitBody: true
+          omitBodyDuringUpdate: true
+          tag: ci
