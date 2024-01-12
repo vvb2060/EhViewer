@@ -17,19 +17,6 @@ android {
     buildToolsVersion = "35.0.0"
     ndkVersion = "27.2.12479018"
 
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            if (gradle.startParameter.taskNames.any { it.contains("Release") }) {
-                include("arm64-v8a", "x86_64", "armeabi-v7a", "x86")
-                isUniversalApk = true
-            } else {
-                include("arm64-v8a", "x86")
-            }
-        }
-    }
-
     val signConfig = signingConfigs.create("release") {
         storeFile = File(projectDir.path + "/keystore/androidkey.jks")
         storePassword = "000000"
@@ -120,6 +107,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            vcsInfo.include = false
             proguardFiles("proguard-rules.pro")
             signingConfig = signConfig
             buildConfigField("String", "BUILD_TIME", "\"$buildTime\"")
