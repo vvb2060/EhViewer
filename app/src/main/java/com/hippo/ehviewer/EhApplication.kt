@@ -36,7 +36,9 @@ import coil3.request.crossfade
 import coil3.serviceLoaderEnabled
 import coil3.util.DebugLogger
 import com.hippo.ehviewer.client.EhCookieStore
+import com.hippo.ehviewer.client.EhDns
 import com.hippo.ehviewer.client.EhEngine
+import com.hippo.ehviewer.client.EhSSLSocketFactory
 import com.hippo.ehviewer.client.EhTagDatabase
 import com.hippo.ehviewer.client.data.GalleryDetail
 import com.hippo.ehviewer.coil.DownloadThumbInterceptor
@@ -250,8 +252,9 @@ class EhApplication :
                 .build()
             OkHttpClient.Builder().apply {
                 cookieJar(EhCookieStore)
+                dns(EhDns)
                 proxySelector(ehProxySelector)
-                sslSocketFactory(certs.sslSocketFactory(), certs.trustManager)
+                sslSocketFactory(EhSSLSocketFactory(certs.sslSocketFactory()), certs.trustManager)
                 addInterceptor(CloudflareInterceptor(application))
             }.build()
         }
