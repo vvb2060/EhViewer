@@ -1,7 +1,4 @@
 import java.io.ByteArrayOutputStream
-import java.time.Instant
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 plugins {
     alias(libs.plugins.android.application)
@@ -36,8 +33,12 @@ android {
     }
 
     val buildTime by lazy {
-        val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm").withZone(ZoneOffset.UTC)
-        formatter.format(Instant.now())
+        val stdout = ByteArrayOutputStream()
+        exec {
+            commandLine = "git log -1 --format=%cd --date=iso".split(' ')
+            standardOutput = stdout
+        }
+        stdout.toString().trim()
     }
 
     defaultConfig {
