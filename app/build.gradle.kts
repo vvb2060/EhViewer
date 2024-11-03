@@ -1,7 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.time.Instant
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 val isRelease: Boolean
     get() = gradle.startParameter.taskNames.any { it.contains("Release") }
@@ -45,8 +42,10 @@ android {
     }
 
     val buildTime by lazy {
-        val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm").withZone(ZoneOffset.UTC)
-        formatter.format(Instant.now())
+        val stdout = providers.exec {
+            commandLine = "git log -1 --format=%cd --date=iso".split(' ')
+        }.standardOutput
+        stdout.asText.get().trim()
     }
 
     defaultConfig {
