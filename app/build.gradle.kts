@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.tasks.CompileArtProfileTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 val isRelease: Boolean
@@ -82,10 +83,7 @@ android {
 
     packaging {
         resources {
-            excludes += "/META-INF/**"
-            excludes += "/kotlin/**"
-            excludes += "**.txt"
-            excludes += "**.bin"
+            excludes += "**"
         }
     }
 
@@ -95,9 +93,18 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            vcsInfo.include = false
             proguardFiles("proguard-rules.pro")
             signingConfig = signConfig
             buildConfigField("String", "BUILD_TIME", "\"$buildTime\"")
+            optimization {
+                keepRules {
+                    ignoreFrom(
+                        "androidx.startup:startup-runtime",
+                        "com.squareup.okhttp3:okhttp",
+                    )
+                }
+            }
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -184,6 +191,11 @@ kotlin {
 
 configurations.all {
     exclude("dev.rikka.rikkax.appcompat", "appcompat")
+    exclude("androidx.profileinstaller", "profileinstaller")
+}
+
+tasks.withType<CompileArtProfileTask>().configureEach {
+    enabled = false
 }
 
 ksp {
