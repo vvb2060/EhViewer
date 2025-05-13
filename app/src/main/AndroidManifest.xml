@@ -29,6 +29,15 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
+    <permission
+        android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:protectionLevel="signature"
+        tools:node="remove" />
+
+    <uses-permission
+        android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        tools:node="remove" />
+
     <uses-feature
         android:glEsVersion="0x00030000"
         android:required="true" />
@@ -47,6 +56,7 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme"
+        tools:remove="android:appComponentFactory"
         tools:ignore="UnusedAttribute">
 
         <activity
@@ -153,15 +163,6 @@
             android:name=".ui.WebViewActivity" />
 
         <service
-            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
-            android:enabled="false"
-            android:exported="false">
-            <meta-data
-                android:name="autoStoreLocales"
-                android:value="true" />
-        </service>
-
-        <service
             android:name="com.hippo.ehviewer.download.DownloadService"
             android:foregroundServiceType="dataSync"
             android:label="@string/download_service_label" />
@@ -177,5 +178,14 @@
                 android:resource="@xml/filepaths" />
 
         </provider>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
+
+        <service
+            android:name="androidx.room.MultiInstanceInvalidationService"
+            tools:node="remove" />
     </application>
 </manifest>
