@@ -59,6 +59,8 @@ import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import kotlinx.coroutines.DelicateCoroutinesApi
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
 import okhttp3.tls.HandshakeCertificates
 import okio.FileSystem
 import okio.Path.Companion.toOkioPath
@@ -256,6 +258,7 @@ class EhApplication :
                 proxySelector(ehProxySelector)
                 sslSocketFactory(EhSSLSocketFactory(certs.sslSocketFactory()), certs.trustManager)
                 addInterceptor(CloudflareInterceptor(application))
+                addNetworkInterceptor(HttpLoggingInterceptor().apply { level = BASIC })
             }.build()
         }
 
