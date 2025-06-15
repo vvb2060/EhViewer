@@ -152,6 +152,7 @@ dependencies {
     implementation(libs.okhttp.coroutines)
     implementation(libs.okhttp.tls)
     implementation(libs.okhttp.dnsoverhttps)
+    implementation(libs.okhttp.logging)
 
     implementation(libs.okio.jvm)
 
