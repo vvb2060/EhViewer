@@ -76,7 +76,11 @@ class DownloadService :
             .setContentText(null)
             .setSubText(null)
             .setProgress(0, 0, true)
-        startForeground(ID_DOWNLOADING, mDownloadingBuilder!!.build())
+        try {
+            startForeground(ID_DOWNLOADING, mDownloadingBuilder!!.build())
+        } catch (e: Exception) {
+            Log.w("TAG", "Failed to start foreground service", e)
+        }
     }
 
     override fun onDestroy() {
